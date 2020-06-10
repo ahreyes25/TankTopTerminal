@@ -204,8 +204,10 @@ for (var i = 0; i < ds_list_size(history); i++) {
 		draw_text(_text_x, input_string_y - (char_height * 2) - (char_height * i), _string);
 	}
 		
-	if (_failed)
-		draw_text(_text_x + string_width(_string), input_string_y - (char_height * 2) - (char_height * i), " -- FAILED");
+	if (_failed) {
+		var _fail_message = _history_data[7];
+		draw_text(_text_x + string_width(_string), input_string_y - (char_height * 2) - (char_height * i), " -- FAILED: " + string(_fail_message));
+	}
 	draw_set_color(c_white);
 }
 #endregion

@@ -28,6 +28,7 @@ switch (_action) {
 	#region create
 	case "create":
 		var _failed			= true;
+		var _fail_message	= "";
 		var _object_index	= undefined;
 		
 		for (var i = 0; i < 10000; i++) {
@@ -55,36 +56,50 @@ switch (_action) {
 								variable_instance_set(_instance, _param, _value);
 							else
 								variable_instance_set(_instance, _param, real(_value));
+							_fail_message = "";
 						}
+						else
+							_fail_message = "variable does not exist for " + string(_instance);
 					}
+					else
+						_fail_message = "parameters and/or values not defined.";
 				}
 			}
+			else
+				_fail_message = "object " + string(_instance) + " could not be created.";
 		}
-		ds_list_insert(history, 0, [input_string, input_index, space_count, comma_placed, auto_delim, true, _failed]);
+		else 
+			_fail_message = "object " + string(_object) + " does not exist.";
+			
+		ds_list_insert(history, 0, [input_string, input_index, space_count, comma_placed, auto_delim, true, _failed, _fail_message]);
 		break;
 	#endregion
 	#region destroy
 	case "destroy":
-		var _failed = true;
+		var _failed			= true;
+		var _fail_message	= "object " + string(_object) + " does not exist.";
 		
 		with (all) {			
 			if (string(id) == _object) {
 				instance_destroy();	
-				_failed = false;
+				_failed			= false;
+				_fail_message	= "";
 			}
 			else if (object_get_name(object_index) == _object) {
 				instance_destroy();	
-				_failed = false;
+				_failed			= false;
+				_fail_message	= "";
 			}
 		}
-		ds_list_insert(history, 0, [input_string, input_index, space_count, comma_placed, auto_delim, true, _failed]);
+		ds_list_insert(history, 0, [input_string, input_index, space_count, comma_placed, auto_delim, true, _failed, _fail_message]);
 		break;
 	#endregion
 	#region get
 	case "get":
-		var _failed	 = true;
-		var _history = history;
-		var _inserts = ds_list_create();
+		var _failed			= true;
+		var _fail_message	= "";
+		var _history		= history;
+		var _inserts		= ds_list_create();
 		
 		with (all) {
 			if (string(id) == _object || object_get_name(object_index) == _object) {
@@ -94,14 +109,21 @@ switch (_action) {
 					if (_prop != undefined && _prop != "") {
 						if (variable_instance_exists(id, _prop)) {
 							var _get_string = string(variable_instance_get(id, _prop));
-							_failed = false;
-							ds_list_add(_inserts, [_get_string, string_length(_get_string), 0, false, false, false, _failed]);
+							_failed			= false;
+							_fail_message	= "";
+							ds_list_add(_inserts, [_get_string, string_length(_get_string), 0, false, false, false, _failed, _fail_message]);
 						}
+						else
+							_fail_message = "var " + string(_prop) + " does not exist for " + string(id);
 					}	
+					else
+						_fail_message = "parameter is undefined.";
 				}
 			}
+			else 
+				_fail_message = "object " + string(_object) + " does not exist.";
 		}
-		ds_list_insert(history, 0, [input_string, input_index, space_count, comma_placed, auto_delim, true, _failed]);
+		ds_list_insert(history, 0, [input_string, input_index, space_count, comma_placed, auto_delim, true, _failed, _fail_message]);
 		
 		for (var i = 0; i < ds_list_size(_inserts); i++)
 			ds_list_insert(history, 0, _inserts[| i]);	
@@ -110,8 +132,9 @@ switch (_action) {
 	#endregion
 	#region set
 	case "set":
-		var _failed	 = true;
-		var _history = history;
+		var _failed			= true;
+		var _history		= history;
+		var _fail_message	= "";
 		
 		with (all) {
 			if (string(id) == _object || object_get_name(object_index) == _object) {
@@ -125,19 +148,28 @@ switch (_action) {
 								variable_instance_set(id, _param, _value);
 							else
 								variable_instance_set(id, _param, real(_value));
-							_failed = false;
+								
+							_failed			= false;
+							_fail_message	= "";
 						}
+						else
+							_fail_message = "var " + string(_param) + " does not exist for " + string(id);
 					}	
+					else
+						_fail_message = "properties and/or values are undefined.";
 				}
 			}
+			else 
+				_fail_message = "object " + string(_object) + " does not exist.";
 		}
-		ds_list_insert(_history, 0, [input_string, input_index, space_count, comma_placed, auto_delim, true, _failed]);
+		ds_list_insert(_history, 0, [input_string, input_index, space_count, comma_placed, auto_delim, true, _failed, _fail_message]);
 		break;
 	#endregion
 	#region watch
 	case "watch":
-		var _failed	 = true;
-		var _history = history;
+		var _failed			= true;
+		var _history		= history;
+		var _fail_message	= "";
 		
 		if (ds_list_size(_props) > 0) {
 			var _gui = instance_create_depth(sw / 2, sh / 2, 0, _obj_terminal_gui);
@@ -155,9 +187,12 @@ switch (_action) {
 								var _get_string = string(variable_instance_get(id, _prop));
 								var _value = [_prop, _get_string, _get_string, _get_string];
 								ds_list_add(_values_list, _value);
-								_failed = false;
+								_failed			= false;
+								_fail_message	= "";
 							}
 						}	
+						else
+							_fail_message = "parameter is undefined.";
 					}
 					
 					// Add Values To Existing, or New Gui Objects
@@ -203,9 +238,11 @@ switch (_action) {
 						}
 					}
 				}
+				else
+					_fail_message = "object " + string(_object) + " does not exist.";
 			}
 		}
-		ds_list_insert(_history, 0, [input_string, string_length(input_string), space_count, comma_placed, auto_delim, true, _failed]);
+		ds_list_insert(_history, 0, [input_string, string_length(input_string), space_count, comma_placed, auto_delim, true, _failed, _fail_message]);
 		break;
 	#endregion
 	#region clear
@@ -221,37 +258,57 @@ switch (_action) {
 	#endregion
 	#region room
 	case "room":
-		var _failed = true;
+		var _failed			= true;
+		var _fail_message	= "";
 		
 		switch (_object) {
 			case "restart":
 				room_restart();
-				_failed = false;
+				_failed			= false;
+				_fail_message	= "";
 				break;
 				
 			case "goto":
+				for (var i = 0; i < 10000; i++) {
+					if (!room_exists(i)) break;
+					
+					if (room_get_name(i) == _props[| 0]) {
+						room_goto(i);
+						_failed			= false;
+						_fail_message	= "";
+						break;
+					}
+					else 
+						_fail_message = "room " + string(_props[| 0]) + " does not exist."
+				}
 				break;
 			
 			case "next":
 				if (room_exists(room + 1)) {
 					room_goto_next();
-					_failed = false;
+					_failed			= false;
+					_fail_message	= "";
 				}
+				else 
+					_fail_message = "there are no more rooms.";
 				break;
 				
 			case "previous":
 				if (room_exists(room - 1)) {
 					room_goto_previous();
-					_failed = false;
+					_failed			= false;
+					_fail_message	= "";
 				}
+				else
+					_fail_message = "there are no previous rooms.";
 				break;
 		}
-		ds_list_insert(history, 0, [input_string, input_index, space_count, comma_placed, auto_delim, true, _failed]);
+		ds_list_insert(history, 0, [input_string, input_index, space_count, comma_placed, auto_delim, true, _failed, _fail_message]);
 		break;
 	#endregion
 	#region default
 	default:
-		ds_list_insert(history, 0, [input_string, input_index, space_count, comma_placed, auto_delim, true, _failed]);
+		ds_list_insert(history, 0, [input_string, input_index, space_count, comma_placed, auto_delim, true, _failed, "unknown failure"]);
 		break;
 	#endregion
 }
