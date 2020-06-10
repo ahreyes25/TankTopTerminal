@@ -71,7 +71,7 @@ switch (_action) {
 		else 
 			_fail_message = "object " + string(_object) + " does not exist.";
 			
-		ds_list_insert(history, 0, [input_string, input_index, space_count, comma_placed, auto_delim, true, _failed, _fail_message]);
+		ds_list_insert(history, 0, [input_string, input_index, space_count, comma_placed, auto_delim, true, _failed, _fail_message, suggested_action, suggested_object]);
 		break;
 	#endregion
 	#region destroy
@@ -91,7 +91,7 @@ switch (_action) {
 				_fail_message	= "";
 			}
 		}
-		ds_list_insert(history, 0, [input_string, input_index, space_count, comma_placed, auto_delim, true, _failed, _fail_message]);
+		ds_list_insert(history, 0, [input_string, input_index, space_count, comma_placed, auto_delim, true, _failed, _fail_message, suggested_action, suggested_object]);
 		break;
 	#endregion
 	#region get
@@ -111,7 +111,7 @@ switch (_action) {
 							var _get_string = string(variable_instance_get(id, _prop));
 							_failed			= false;
 							_fail_message	= "";
-							ds_list_add(_inserts, [_get_string, string_length(_get_string), 0, false, false, false, _failed, _fail_message]);
+							ds_list_add(_inserts, [_get_string, string_length(_get_string), 0, false, false, false, _failed, _fail_message, suggested_action, suggested_object]);
 						}
 						else
 							_fail_message = "var " + string(_prop) + " does not exist for " + string(id);
@@ -123,7 +123,7 @@ switch (_action) {
 			else 
 				_fail_message = "object " + string(_object) + " does not exist.";
 		}
-		ds_list_insert(history, 0, [input_string, input_index, space_count, comma_placed, auto_delim, true, _failed, _fail_message]);
+		ds_list_insert(history, 0, [input_string, input_index, space_count, comma_placed, auto_delim, true, _failed, _fail_message, suggested_action, suggested_object]);
 		
 		for (var i = 0; i < ds_list_size(_inserts); i++)
 			ds_list_insert(history, 0, _inserts[| i]);	
@@ -162,7 +162,7 @@ switch (_action) {
 			else 
 				_fail_message = "object " + string(_object) + " does not exist.";
 		}
-		ds_list_insert(_history, 0, [input_string, input_index, space_count, comma_placed, auto_delim, true, _failed, _fail_message]);
+		ds_list_insert(_history, 0, [input_string, input_index, space_count, comma_placed, auto_delim, true, _failed, _fail_message, suggested_action, suggested_object]);
 		break;
 	#endregion
 	#region watch
@@ -242,7 +242,7 @@ switch (_action) {
 					_fail_message = "object " + string(_object) + " does not exist.";
 			}
 		}
-		ds_list_insert(_history, 0, [input_string, string_length(input_string), space_count, comma_placed, auto_delim, true, _failed, _fail_message]);
+		ds_list_insert(_history, 0, [input_string, string_length(input_string), space_count, comma_placed, auto_delim, true, _failed, _fail_message, suggested_action, suggested_object]);
 		break;
 	#endregion
 	#region clear
@@ -262,12 +262,14 @@ switch (_action) {
 		var _fail_message	= "";
 		
 		switch (_object) {
+			#region restart
 			case "restart":
 				room_restart();
 				_failed			= false;
 				_fail_message	= "";
 				break;
-				
+			#endregion
+			#region goto
 			case "goto":
 				for (var i = 0; i < 10000; i++) {
 					if (!room_exists(i)) break;
@@ -282,7 +284,8 @@ switch (_action) {
 						_fail_message = "room " + string(_props[| 0]) + " does not exist."
 				}
 				break;
-			
+			#endregion
+			#region next
 			case "next":
 				if (room_exists(room + 1)) {
 					room_goto_next();
@@ -292,7 +295,8 @@ switch (_action) {
 				else 
 					_fail_message = "there are no more rooms.";
 				break;
-				
+			#endregion
+			#region previous
 			case "previous":
 				if (room_exists(room - 1)) {
 					room_goto_previous();
@@ -302,13 +306,41 @@ switch (_action) {
 				else
 					_fail_message = "there are no previous rooms.";
 				break;
+			#endregion
 		}
-		ds_list_insert(history, 0, [input_string, input_index, space_count, comma_placed, auto_delim, true, _failed, _fail_message]);
+		ds_list_insert(history, 0, [input_string, input_index, space_count, comma_placed, auto_delim, true, _failed, _fail_message, suggested_action, suggested_object]);
+		break;
+	#endregion
+	#region window
+	case "window":
+		var _failed			= true;
+		var _fail_message	= "";
+		
+		switch (_object) {
+			#region fullscreen
+			case "fullscreen":
+				var _fullscreen = window_get_fullscreen();
+				window_set_fullscreen(!_fullscreen);
+				
+				if (window_get_fullscreen() != _fullscreen) {
+					_failed			= false;
+					_fail_message	= "";
+				}
+				else
+					_fail_message	= "unable to toggle fullscreen.";
+				break;
+			#endregion
+			#region resize
+			case "resize":
+				break;
+			#endregion
+		}
+		ds_list_insert(history, 0, [input_string, input_index, space_count, comma_placed, auto_delim, true, _failed, _fail_message, suggested_action, suggested_object]);
 		break;
 	#endregion
 	#region default
 	default:
-		ds_list_insert(history, 0, [input_string, input_index, space_count, comma_placed, auto_delim, true, _failed, "unknown failure"]);
+		ds_list_insert(history, 0, [input_string, input_index, space_count, comma_placed, auto_delim, true, _failed, "unknown failure", suggested_action, suggested_object]);
 		break;
 	#endregion
 }

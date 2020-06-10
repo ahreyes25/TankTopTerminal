@@ -16,9 +16,10 @@ comma_placed		= false;
 anchor_index		= undefined;
 shift_held			= false;
 suggested_action	= "";
+suggested_object	= "";
 commands			= [
 	"create", "destroy", "get", "set", "watch", 
-	"room", 
+	"room", "window",
 	"clear",
 ];
 objects_ignore		= [

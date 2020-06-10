@@ -53,12 +53,24 @@ draw_set_color(c_white);
 #endregion
 #region Draw Template Text
 draw_set_color(c_dkgray);
+#region Generic Suggestion
 if (input_string == "")
 	draw_text(text_padding + char_width, input_string_y, "action object : [parameters]* , [values]*"); 
-else if (string_char_at(input_string, string_length(input_string) - 1) == ":")
+#endregion
+#region Object Suggestions
+else if (suggested_action != "room" && suggested_action != "window" && string_char_at(input_string, string_length(input_string) - 1) == ":")
 	draw_text(text_padding + char_width + string_width(input_string), input_string_y, " [parameters]* , [values]*"); 
-else if (string_char_at(input_string, string_length(input_string) - 1) == ",")
+else if (suggested_action != "room" && suggested_action != "window" && string_char_at(input_string, string_length(input_string) - 1) == ",")
 	draw_text(text_padding + char_width + string_width(input_string), input_string_y, " [values]*"); 
+#endregion
+#region Room Suggestions
+else if (suggested_action == "room" && suggested_object == "goto")
+	draw_text(text_padding + char_width + string_width(input_string), input_string_y, " rm_level1"); 
+#endregion
+#region Window Suggestions
+else if (suggested_action == "window" && suggested_object == "resize")
+	draw_text(text_padding + char_width + string_width(input_string), input_string_y, " 1080 720"); 
+#endregion
 draw_set_color(c_white);
 #endregion
 #region Draw Suggested Text
@@ -69,84 +81,26 @@ if (show) {
 			draw_set_color(c_white);
 			
 			switch(suggested[| i]) {
-				#region create
-				case "create":
-					var _info_text		= " -- info| create object with defined properties/values.";
-					var _example_text	= " example| create obj_player : x y , 100 200";
-					draw_set_color(c_white);
-					draw_text(text_padding + char_width, input_string_y + (char_height * 2) + (char_height * i), suggested[| i]);
-					draw_set_color(orange);
-					draw_text(text_padding + char_width + string_width(suggested[| i]), input_string_y + (char_height * 2) + (char_height * i), _info_text); 
-					draw_set_color(c_white);
-					draw_text(text_padding + char_width + string_width(suggested[| i]) + string_width(_info_text), input_string_y + (char_height * 2) + (char_height * i), _example_text); 
-					break;
-				#endregion
-				#region destroy
-				case "destroy":
-					var _info_text		= " -- info| destroy object or instance.";
-					var _example_text	= " example| destroy obj_player";
-					draw_set_color(c_white);
-					draw_text(text_padding + char_width, input_string_y + (char_height * 2) + (char_height * i), suggested[| i]);
-					draw_set_color(orange);
-					draw_text(text_padding + char_width + string_width(suggested[| i]), input_string_y + (char_height * 2) + (char_height * i), _info_text); 
-					draw_set_color(c_white);
-					draw_text(text_padding + char_width + string_width(suggested[| i]) + string_width(_info_text), input_string_y + (char_height * 2) + (char_height * i), _example_text); 
-					break;
-				#endregion
-				#region get
-				case "get":
-					var _info_text		= " -- info| get object value into console output.";
-					var _example_text	= " example| get obj_player : image_angle";
-					draw_set_color(c_white);
-					draw_text(text_padding + char_width, input_string_y + (char_height * 2) + (char_height * i), suggested[| i]);
-					draw_set_color(orange);
-					draw_text(text_padding + char_width + string_width(suggested[| i]), input_string_y + (char_height * 2) + (char_height * i), _info_text); 
-					draw_set_color(c_white);
-					draw_text(text_padding + char_width + string_width(suggested[| i]) + string_width(_info_text), input_string_y + (char_height * 2) + (char_height * i), _example_text); 
-					break;
-				#endregion
-				#region set
-				case "set":
-					var _info_text		= " -- info| set object property.";
-					var _example_text	= " example| set obj_player : image_alpha , 0.5";
-					draw_set_color(c_white);
-					draw_text(text_padding + char_width, input_string_y + (char_height * 2) + (char_height * i), suggested[| i]);
-					draw_set_color(orange);
-					draw_text(text_padding + char_width + string_width(suggested[| i]), input_string_y + (char_height * 2) + (char_height * i), _info_text); 
-					draw_set_color(c_white);
-					draw_text(text_padding + char_width + string_width(suggested[| i]) + string_width(_info_text), input_string_y + (char_height * 2) + (char_height * i), _example_text); 
-					break;
-				#endregion
-				#region watch
-				case "watch":
-					var _info_text		= " -- info| watch object property on gui.";
-					var _example_text	= " example| watch obj_player : life";
-					draw_set_color(c_white);
-					draw_text(text_padding + char_width, input_string_y + (char_height * 2) + (char_height * i), suggested[| i]);
-					draw_set_color(orange);
-					draw_text(text_padding + char_width + string_width(suggested[| i]), input_string_y + (char_height * 2) + (char_height * i), _info_text); 
-					draw_set_color(c_white);
-					draw_text(text_padding + char_width + string_width(suggested[| i]) + string_width(_info_text), input_string_y + (char_height * 2) + (char_height * i), _example_text); 
-					break;
-				#endregion
-				#region clear
-				case "clear":
-					var _info_text		= " -- info| clear terminal history";
-					var _example_text	= " example| clear";
-					draw_set_color(c_white);
-					draw_text(text_padding + char_width, input_string_y + (char_height * 2) + (char_height * i), suggested[| i]);
-					draw_set_color(orange);
-					draw_text(text_padding + char_width + string_width(suggested[| i]), input_string_y + (char_height * 2) + (char_height * i), _info_text); 
-					draw_set_color(c_white);
-					draw_text(text_padding + char_width + string_width(suggested[| i]) + string_width(_info_text), input_string_y + (char_height * 2) + (char_height * i), _example_text); 
-					break;
-				#endregion
-				#region default
-				default:
-					draw_set_color(c_white);
-					draw_text(text_padding + char_width, input_string_y + (char_height * 2) + (char_height * i), suggested[| i]);
-					break;
-				#endregion
+				case "create":	var _info_text = " -- info| create object with defined properties/values.";		var _example_text = " example| create obj_player : x y , 100 200";	break;
+				case "destroy":	var _info_text = " -- info| destroy object or instance.";						var _example_text = " example| destroy obj_player";					break;
+				case "get":		var _info_text = " -- info| get object value into console output.";				var _example_text = " example| get obj_player : image_angle";		break;
+				case "set":		var _info_text = " -- info| set object property.";								var _example_text = " example| set obj_player : image_alpha , 0.5";	break;
+				case "watch":	var _info_text = " -- info| watch object property on gui.";						var _example_text = " example| watch obj_player : life";			break;
+				case "clear":	var _info_text = " -- info| clear terminal history.";							var _example_text = " example| clear";								break;
+				case "room":	var _info_text = " -- info| room operations.";									var _example_text = " example| room goto : rm_level1";				break;
+				case "window":	var _info_text = " -- info| window operations.";								var _example_text = " example| window resize : 1080 720";			break;
+				default:		var _info_text = "";															var _example_text = "";												break;
+			}
+			draw_set_color(c_white);
+			draw_text(text_padding + char_width, input_string_y + (char_height * 2) + (char_height * i), suggested[| i]);
+			if (_info_text != "") {
+				draw_set_color(orange);
+				draw_text(text_padding + char_width + string_width(suggested[| i]), input_string_y + (char_height * 2) + (char_height * i), _info_text); 
+				draw_set_color(c_white);
+			}
+			if (_example_text != "") {
+				draw_set_color(c_white);
+				draw_text(text_padding + char_width + string_width(suggested[| i]) + string_width(_info_text), input_string_y + (char_height * 2) + (char_height * i), _example_text); 
 			}
 		}
 		else {
@@ -241,8 +195,8 @@ switch (penguin_state) {
 #endregion
 
 draw_text(10, 10, "suggested_action: " + string(suggested_action));
-/*draw_text(10, 30, "input_index: " + string(input_index));
-draw_text(10, 50, "space_count: " + string(space_count));
+draw_text(10, 30, "suggested_object: " + string(suggested_object));
+/*draw_text(10, 50, "space_count: " + string(space_count));
 draw_text(10, 70, "shift: " + string(keyboard_check(vk_shift)));
 draw_text(10, 90, "alt: " + string(keyboard_check(vk_lalt)));
 draw_text(10, 110, "ctrl: " + string(keyboard_check(vk_lcontrol)));

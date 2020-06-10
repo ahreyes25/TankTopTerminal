@@ -27,7 +27,10 @@ if (typing) {
 		switch (keyboard_key) {		
 			#region vk_backspace
 			case vk_backspace:
-				if (in_history || in_suggested)	break;
+				if (in_history || in_suggested) {
+					in_history	 = false;
+					in_suggested = false;
+				}
 				
 				// Normal Backspace
 				if (anchor_index == undefined) {
@@ -207,13 +210,15 @@ if (typing) {
 					var _history_data	= history[| history_index];
 					var _is_command		= _history_data[5];
 					if (_is_command) {
-						input_string	= _history_data[0];
-						input_index		= _history_data[1];
-						space_count		= _history_data[2];
-						comma_placed	= _history_data[3];
-						auto_delim		= _history_data[4];
-						anchor_index	= undefined;
-						in_history		= false;
+						input_string		= _history_data[0];
+						input_index			= _history_data[1];
+						space_count			= _history_data[2];
+						comma_placed		= _history_data[3];
+						auto_delim			= _history_data[4];
+						suggested_action	= _history_data[8];
+						suggested_object	= _history_data[9];
+						anchor_index		= undefined;
+						in_history			= false;
 					}
 					else {
 						var _property	= _history_data[0];
@@ -231,7 +236,7 @@ if (typing) {
 						in_suggested		= false;
 						space_count			= 1;
 						suggested_index		= 0;
-						suggested_action	= input_string;
+						suggested_action	= string_delete(input_string, string_length(input_string), 1);
 						ds_list_clear(suggested);
 					}
 					// Object
@@ -247,11 +252,12 @@ if (typing) {
 					
 						var _object_string			= string_copy(input_string, _action_index, string_length(input_string) - _action_index + 1);
 						var _suggested_substring	= string_delete(suggested[| suggested_index], 1, string_length(_object_string));
-						input_string   += _suggested_substring + " ";
-						input_index	   += string_length(_suggested_substring) + 1;
-						in_suggested	= false;
-						suggested_index = 0;
-						space_count++;
+						input_string	   += _suggested_substring + " ";
+						input_index		   += string_length(_suggested_substring) + 1;
+						in_suggested		= false;
+						suggested_index		= 0;
+						suggested_object	= suggested[| suggested_index];
+						space_count		   += 1;
 					}
 				}
 				#region Auto Format Colon
@@ -294,7 +300,7 @@ if (typing) {
 					in_suggested		= false;
 					space_count			= 1;
 					suggested_index		= 0;
-					suggested_action	= input_string;
+					suggested_action	= string_delete(input_string, string_length(input_string), 1);
 					ds_list_clear(suggested);
 				}
 				// Autocomplete Object
@@ -310,11 +316,12 @@ if (typing) {
 					
 					var _object_string			= string_copy(input_string, _action_index, string_length(input_string) - _action_index + 1);
 					var _suggested_substring	= string_delete(suggested[| suggested_index], 1, string_length(_object_string));
-					input_string   += _suggested_substring + " ";
-					input_index    += string_length(_suggested_substring) + 1;
-					in_suggested    = false;
-					suggested_index = 0;
-					space_count++;
+					input_string	   += _suggested_substring + " ";
+					input_index		   += string_length(_suggested_substring) + 1;
+					in_suggested		= false;
+					suggested_index		= 0;
+					suggested_object	= suggested[| suggested_index];
+					space_count		   += 1;
 				}
 				#region Auto Format Colon
 				if (space_count == 2 && !auto_delim) {
@@ -453,7 +460,19 @@ if (typing) {
 							break;
 						}
 					}
-					suggested_action = string_copy(input_string, 1, _index - 1);
+					suggested_action = string_copy(input_string, 1, _index - 2);
+				}
+				#endregion
+				#region Get Suggested Object
+				if (space_count == 2) {
+					var _index  = 0;
+					for (var i = 1; i <= string_length(input_string); i++) {
+						if (string_char_at(input_string, i) == " ") {
+							_index = i + 1;
+							break;
+						}
+					}
+					suggested_object = string_copy(input_string, _index, string_length(input_string) - _index + 1);
 				}
 				#endregion
 				#region Auto Format Colon
@@ -543,7 +562,7 @@ if (show && typing) {
 	#region Second Word
 	else if (space_count == 1) {
 		#region Object
-		if (suggested_action != "room ") {
+		if (suggested_action != "room" && suggested_action != "window") {
 			// Get Second Substring
 			var _action_index  = 0;
 			for (var i = 1; i <= string_length(input_string); i++) {
@@ -580,7 +599,7 @@ if (show && typing) {
 			
 				// If Substring Matches Name, Add to Suggested List
 				var _object_exists		= instance_exists(i);
-				var _action				= (suggested_action == "get " || suggested_action == "destroy " || suggested_action == "watch " || suggested_action == "set ");
+				var _action				= (suggested_action == "get" || suggested_action == "destroy" || suggested_action == "watch" || suggested_action == "set");
 				var _invalid_command	= _action && !_object_exists;
 				if (_matching && _valid_object && !_invalid_command) {
 					if (ds_list_size(suggested) < suggestion_limit)
@@ -590,7 +609,7 @@ if (show && typing) {
 		}
 		#endregion
 		#region Room
-		else if (suggested_action == "room ") {
+		else if (suggested_action == "room") {
 			var _room_commands = ["restart", "next", "previous", "goto"];
 			// Get Second Substring
 			var _action_index  = 0;
@@ -619,6 +638,40 @@ if (show && typing) {
 				if (_matching) {
 					if (ds_list_size(suggested) < suggestion_limit)
 						ds_list_add(suggested, _room_command);
+				}
+			}
+		}
+		#endregion
+		#region Window
+		else if (suggested_action == "window") {
+			var _window_commands = ["fullscreen", "resize"];
+			// Get Second Substring
+			var _action_index  = 0;
+			for (var i = 1; i <= string_length(input_string); i++) {
+				if (string_char_at(input_string, i) == " ") {
+					_action_index = i + 1;
+					break;
+				}
+			}
+			var _window_string = string_copy(input_string, _action_index, string_length(input_string) - _action_index + 1);
+			
+			// Compare Substring To All Object Names In Resource Tree
+			ds_list_clear(suggested);
+			for (var i = 0; i < array_length_1d(_window_commands); i++) {
+				// Check If Name Match Substring
+				var _matching		= true;
+				var _window_command = _window_commands[i];
+				for (var j = 1; j <= string_length(_window_string); j++) {
+					if (string_char_at(_window_command, j) != string_char_at(_window_string, j)) {
+						_matching = false;
+						break;
+					}
+				}
+			
+				// If Substring Matches Name, Add to Suggested List
+				if (_matching) {
+					if (ds_list_size(suggested) < suggestion_limit)
+						ds_list_add(suggested, _window_command);
 				}
 			}
 		}
