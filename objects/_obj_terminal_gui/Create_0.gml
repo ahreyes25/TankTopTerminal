@@ -1,0 +1,16 @@
+draw_x		= x;
+draw_y		= y;
+object		= undefined;
+instances	= ds_list_create();
+values		= ds_list_create();
+box_width	= 0;
+box_height	= 0;
+box_color	= c_black;
+box_alpha	= 0.5;
+frame_color	= _obj_terminal.orange;
+frame_alpha = 0.75;
+text_color	= c_white;
+text_alpha	= 1;
+text_space	= 20;
+node_size	= 20;
+moving		= false
