@@ -255,8 +255,8 @@ if (typing) {
 						input_string	   += _suggested_substring + " ";
 						input_index		   += string_length(_suggested_substring) + 1;
 						in_suggested		= false;
-						suggested_index		= 0;
 						suggested_object	= suggested[| suggested_index];
+						suggested_index		= 0;
 						space_count		   += 1;
 					}
 				}
@@ -319,8 +319,8 @@ if (typing) {
 					input_string	   += _suggested_substring + " ";
 					input_index		   += string_length(_suggested_substring) + 1;
 					in_suggested		= false;
-					suggested_index		= 0;
 					suggested_object	= suggested[| suggested_index];
+					suggested_index		= 0;
 					space_count		   += 1;
 				}
 				#region Auto Format Colon
@@ -472,7 +472,7 @@ if (typing) {
 							break;
 						}
 					}
-					suggested_object = string_copy(input_string, _index, string_length(input_string) - _index + 1);
+					suggested_object = string_copy(input_string, _index, string_length(input_string) - _index);
 				}
 				#endregion
 				#region Auto Format Colon

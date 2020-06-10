@@ -1,5 +1,6 @@
 sw					 = surface_get_width( application_surface);
 sh					 = surface_get_height(application_surface);
+terminal_yt			 = sh / 2;
 blink_iter			+= blink_speed;
 terminal_y			 = lerp(terminal_y, (terminal_yt * show) - (!show * 20), 0.1);
 input_string_y		 = terminal_y - char_height * 1.5;

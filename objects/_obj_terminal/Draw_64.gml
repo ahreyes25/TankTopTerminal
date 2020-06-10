@@ -69,7 +69,7 @@ else if (suggested_action == "room" && suggested_object == "goto")
 #endregion
 #region Window Suggestions
 else if (suggested_action == "window" && suggested_object == "resize")
-	draw_text(text_padding + char_width + string_width(input_string), input_string_y, " 1080 720"); 
+	draw_text(text_padding + char_width + string_width(input_string), input_string_y, " width height resize_surface?* (1 = true, 0 = false)"); 
 #endregion
 draw_set_color(c_white);
 #endregion
@@ -81,15 +81,16 @@ if (show) {
 			draw_set_color(c_white);
 			
 			switch(suggested[| i]) {
-				case "create":	var _info_text = " -- info| create object with defined properties/values.";		var _example_text = " example| create obj_player : x y , 100 200";	break;
-				case "destroy":	var _info_text = " -- info| destroy object or instance.";						var _example_text = " example| destroy obj_player";					break;
-				case "get":		var _info_text = " -- info| get object value into console output.";				var _example_text = " example| get obj_player : image_angle";		break;
-				case "set":		var _info_text = " -- info| set object property.";								var _example_text = " example| set obj_player : image_alpha , 0.5";	break;
-				case "watch":	var _info_text = " -- info| watch object property on gui.";						var _example_text = " example| watch obj_player : life";			break;
-				case "clear":	var _info_text = " -- info| clear terminal history.";							var _example_text = " example| clear";								break;
-				case "room":	var _info_text = " -- info| room operations.";									var _example_text = " example| room goto : rm_level1";				break;
-				case "window":	var _info_text = " -- info| window operations.";								var _example_text = " example| window resize : 1080 720";			break;
-				default:		var _info_text = "";															var _example_text = "";												break;
+				case "create":	var _info_text = " -- info| create object with defined properties/values.";									var _example_text = " example| create obj_player : x y , 100 200";				break;
+				case "destroy":	var _info_text = " -- info| destroy object or instance.";													var _example_text = " example| destroy obj_player";								break;
+				case "get":		var _info_text = " -- info| get object value into console output.";											var _example_text = " example| get obj_player : image_angle";					break;
+				case "set":		var _info_text = " -- info| set object property.";															var _example_text = " example| set obj_player : image_alpha , 0.5";				break;
+				case "watch":	var _info_text = " -- info| watch object property on gui.";													var _example_text = " example| watch obj_player : life";						break;
+				case "clear":	var _info_text = " -- info| clear terminal history.";														var _example_text = " example| clear";											break;
+				case "room":	var _info_text = " -- info| room operations.";																var _example_text = " example| room goto : rm_level1";							break;
+				case "window":	var _info_text = " -- info| window operations.";															var _example_text = " example| window resize : 1080 720";						break;
+				case "resize":	var _info_text = " -- params: width height optional:resize_application_surface?* (1 = true, 0 = false)";	var _example_text = "";											break;
+				default:		var _info_text = "";																						var _example_text = "";															break;
 			}
 			draw_set_color(c_white);
 			draw_text(text_padding + char_width, input_string_y + (char_height * 2) + (char_height * i), suggested[| i]);

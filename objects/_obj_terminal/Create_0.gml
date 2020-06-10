@@ -1,3 +1,20 @@
+#region Singleton Check
+var _already_exists = false;
+var _id				= id;
+destroyed			= false;
+with (_obj_terminal) {
+	if (id != _id) {
+		_already_exists = true;
+		break;
+	}
+}
+if (_already_exists) {
+	destroyed = true;
+	instance_destroy();
+	return;
+}
+#endregion
+
 // Util
 sw					= surface_get_width(application_surface);
 sh					= surface_get_height(application_surface);

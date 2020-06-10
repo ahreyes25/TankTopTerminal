@@ -1,3 +1,0 @@
-- save file to save terminal history
-- window resize
-- window fullscreen

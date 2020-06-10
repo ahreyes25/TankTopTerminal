@@ -331,7 +331,31 @@ switch (_action) {
 				break;
 			#endregion
 			#region resize
-			case "resize":
+			case "resize":	
+				if (_props[| 0] == undefined || _props[| 1] == undefined) {
+					_fail_message = "please enter a value for window Width AND Height."
+					break;
+				}
+				
+				var _width			= real(_props[| 0]); 
+				var _height			= real(_props[| 1]);
+				var _aspect_ratio	= surface_get_width(application_surface) / surface_get_height(application_surface);
+				
+				window_set_size(_width, _height);
+		
+				// Maintain Aspect Ratio		
+				if (_width >= _height)
+					_width = _height * _aspect_ratio;
+		
+				// Resize Applciation Surface?
+				if (ds_list_size(_props) >= 3 && _props[| 2] != undefined && real(_props[| 2])) {
+					display_set_gui_size(_width, _height);
+					surface_resize(application_surface, _width, _height);
+				}
+				window_center();
+				
+				_failed			= false;
+				_fail_message	= "";
 				break;
 			#endregion
 		}
