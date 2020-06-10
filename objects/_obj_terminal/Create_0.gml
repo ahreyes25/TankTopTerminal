@@ -17,7 +17,9 @@ anchor_index		= undefined;
 shift_held			= false;
 suggested_action	= "";
 commands			= [
-	"create", "destroy", "get", "set", "watch", "clear",
+	"create", "destroy", "get", "set", "watch", 
+	"room", 
+	"clear",
 ];
 objects_ignore		= [
 	_obj_terminal, _obj_terminal_gui

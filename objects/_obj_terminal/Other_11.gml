@@ -219,6 +219,36 @@ switch (_action) {
 		_failed = false;
 		break;
 	#endregion
+	#region room
+	case "room":
+		var _failed = true;
+		
+		switch (_object) {
+			case "restart":
+				room_restart();
+				_failed = false;
+				break;
+				
+			case "goto":
+				break;
+			
+			case "next":
+				if (room_exists(room + 1)) {
+					room_goto_next();
+					_failed = false;
+				}
+				break;
+				
+			case "previous":
+				if (room_exists(room - 1)) {
+					room_goto_previous();
+					_failed = false;
+				}
+				break;
+		}
+		ds_list_insert(history, 0, [input_string, input_index, space_count, comma_placed, auto_delim, true, _failed]);
+		break;
+	#endregion
 	#region default
 	default:
 		ds_list_insert(history, 0, [input_string, input_index, space_count, comma_placed, auto_delim, true, _failed]);

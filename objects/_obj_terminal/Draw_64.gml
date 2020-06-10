@@ -54,7 +54,11 @@ draw_set_color(c_white);
 #region Draw Template Text
 draw_set_color(c_dkgray);
 if (input_string == "")
-	draw_text(text_padding + char_width, input_string_y, "action object : [properties] , [values*]"); 
+	draw_text(text_padding + char_width, input_string_y, "action object : [parameters]* , [values]*"); 
+else if (string_char_at(input_string, string_length(input_string) - 1) == ":")
+	draw_text(text_padding + char_width + string_width(input_string), input_string_y, " [parameters]* , [values]*"); 
+else if (string_char_at(input_string, string_length(input_string) - 1) == ",")
+	draw_text(text_padding + char_width + string_width(input_string), input_string_y, " [values]*"); 
 draw_set_color(c_white);
 #endregion
 #region Draw Suggested Text
@@ -234,8 +238,7 @@ switch (penguin_state) {
 }
 #endregion
 
-
-/*draw_text(10, 10, "hold_key: " + string(hold_key));
+draw_text(10, 10, "suggested_action: " + string(suggested_action));
 /*draw_text(10, 30, "input_index: " + string(input_index));
 draw_text(10, 50, "space_count: " + string(space_count));
 draw_text(10, 70, "shift: " + string(keyboard_check(vk_shift)));
