@@ -24,7 +24,7 @@ if (show && typing) {
 	#region Second Word
 	else if (space_count == 1) {
 		#region Object
-		if (suggested_action != "room" && suggested_action != "window") {		
+		if (suggested_action != "room" && suggested_action != "window" && suggested_action != "clear") {		
 			// Compare Substring To All Object Names In Resource Tree
 			ds_list_clear(suggested);
 			for (var i = 0; i < 10000; i++) {
