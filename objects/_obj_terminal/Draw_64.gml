@@ -195,9 +195,9 @@ switch (penguin_state) {
 }
 #endregion
 
-draw_text(10, 10, "suggested_action: " + string(suggested_action));
-draw_text(10, 30, "suggested_object: " + string(suggested_object));
-/*draw_text(10, 50, "space_count: " + string(space_count));
-draw_text(10, 70, "shift: " + string(keyboard_check(vk_shift)));
-draw_text(10, 90, "alt: " + string(keyboard_check(vk_lalt)));
-draw_text(10, 110, "ctrl: " + string(keyboard_check(vk_lcontrol)));
+//draw_text(10, 10, "suggested_action: " + string(suggested_action));
+//draw_text(10, 30, "suggested_object: " + string(suggested_object));
+//draw_text(10, 50, "space_count: " + string(space_count));
+//draw_text(10, 70, "shift: " + string(keyboard_check(vk_shift)));
+//draw_text(10, 90, "alt: " + string(keyboard_check(vk_lalt)));
+//draw_text(10, 110, "ctrl: " + string(keyboard_check(vk_lcontrol)));

@@ -6,7 +6,7 @@ var _alt			= keyboard_check(vk_alt);
 var _modifier		= keyboard_check(vk_alt) || keyboard_check(vk_shift) || keyboard_check(vk_control) || keyboard_check(vk_end) || keyboard_check(vk_home);
 
 #region Show & Hide Terminal
-if (keyboard_check_pressed(vk_f1)) {
+if (keyboard_check_pressed(vk_f1) || (show && keyboard_check_pressed(vk_escape))) {
 	show = !show;
 	
 	// Clear Input
@@ -16,6 +16,7 @@ if (keyboard_check_pressed(vk_f1)) {
 		holding		= false;
 		typing		= false;
 		alarm[0]	= -1;
+		event_user(3);	// save on close
 	}
 	else
 		typing		= true;	
@@ -576,7 +577,8 @@ if (show && typing) {
 			// Compare Substring To All Object Names In Resource Tree
 			ds_list_clear(suggested);
 			for (var i = 0; i < 10000; i++) {
-				if (!object_exists(i)) break;
+				if (!object_exists(i))								break;
+				if (ds_list_size(suggested) >= suggestion_limit)	break;
 			
 				// Check If Name Match Substring
 				var _matching	 = true;
@@ -601,10 +603,8 @@ if (show && typing) {
 				var _object_exists		= instance_exists(i);
 				var _action				= (suggested_action == "get" || suggested_action == "destroy" || suggested_action == "watch" || suggested_action == "set");
 				var _invalid_command	= _action && !_object_exists;
-				if (_matching && _valid_object && !_invalid_command) {
-					if (ds_list_size(suggested) < suggestion_limit)
-						ds_list_add(suggested, _object_name);
-				}
+				if (_matching && _valid_object && !_invalid_command)
+					ds_list_add(suggested, _object_name);
 			}
 		}
 		#endregion

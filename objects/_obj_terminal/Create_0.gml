@@ -80,3 +80,4 @@ orange				= make_color_rgb(242, 102, 47);
 
 // Other 
 gui_objects			= ds_list_create();
+event_user(4);		// check for load data

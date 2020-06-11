@@ -100,6 +100,8 @@ switch (_action) {
 		var _fail_message	= "";
 		var _history		= history;
 		var _inserts		= ds_list_create();
+		var _sug_action		= suggested_action;
+		var _sug_object		= suggested_object;
 		
 		with (all) {
 			if (string(id) == _object || object_get_name(object_index) == _object) {
@@ -111,7 +113,7 @@ switch (_action) {
 							var _get_string = string(variable_instance_get(id, _prop));
 							_failed			= false;
 							_fail_message	= "";
-							ds_list_add(_inserts, [_get_string, string_length(_get_string), 0, false, false, false, _failed, _fail_message, suggested_action, suggested_object]);
+							ds_list_add(_inserts, [_get_string, string_length(_get_string), 0, false, false, false, _failed, _fail_message, _sug_action, _sug_object]);
 						}
 						else
 							_fail_message = "var " + string(_prop) + " does not exist for " + string(id);
