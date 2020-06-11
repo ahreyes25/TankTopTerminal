@@ -1,10 +1,14 @@
 /// @description Act On Tokens & Store In History
 
 var _action = tokens[| 0];
-var _object = tokens[| 1];
 var _props  = ds_list_create();
 var _values = ds_list_create();
 var _delim	= false;
+
+if (suggested_action == "destroy")
+	var _object = tokens[| 2];
+else
+	var _object = tokens[| 1];
 
 #region Organize Tokens
 for (var i = 2; i < ds_list_size(tokens); i++) {
@@ -233,8 +237,12 @@ switch (_action) {
 						// Gui Object Already Exists
 						else {
 							ds_list_delete(_obj_terminal.gui_objects, ds_list_find_index(_obj_terminal.gui_objects, _existing_gui));
-							instance_destroy(_existing_gui);
 							_gui.object = object_index;
+							_gui.x		= _existing_gui.x;
+							_gui.y		= _existing_gui.y;
+							_gui.draw_x	= _existing_gui.draw_x;
+							_gui.draw_y	= _existing_gui.draw_y;
+							instance_destroy(_existing_gui);
 							ds_list_add(_gui.instances, id);
 							ds_list_add(_gui.values, _values_list);
 						}
@@ -354,10 +362,17 @@ switch (_action) {
 					display_set_gui_size(_width, _height);
 					surface_resize(application_surface, _width, _height);
 				}
-				window_center();
+				alarm[2] = 1;
 				
 				_failed			= false;
 				_fail_message	= "";
+				break;
+			#endregion
+			#region center
+			case "center":
+				_failed			= false;
+				_fail_message	= "";
+				window_center();
 				break;
 			#endregion
 		}

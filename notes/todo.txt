@@ -1,0 +1,9 @@
+- modify suggested template text better
+
+// Later Release
+- customize terminal properties in terminal and save
+- track most used terms
+- layer operations
+- fix mac bugs?
+- room, sprite, and script autocomplete
+- correct typos on input_string when selected a suggestion

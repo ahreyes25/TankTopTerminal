@@ -58,18 +58,39 @@ if (input_string == "")
 	draw_text(text_padding + char_width, input_string_y, "action object : [parameters]* , [values]*"); 
 #endregion
 #region Object Suggestions
-else if (suggested_action != "room" && suggested_action != "window" && string_char_at(input_string, string_length(input_string) - 1) == ":")
-	draw_text(text_padding + char_width + string_width(input_string), input_string_y, " [parameters]* , [values]*"); 
-else if (suggested_action != "room" && suggested_action != "window" && string_char_at(input_string, string_length(input_string) - 1) == ",")
-	draw_text(text_padding + char_width + string_width(input_string), input_string_y, " [values]*"); 
+else if (suggested_action != "room" && suggested_action != "window") {
+	var _second_last_char	= string_char_at(input_string, string_length(input_string) - 2);
+	var _last_char			= string_char_at(input_string, string_length(input_string) - 1);
+	
+	if (_last_char == "," || (_last_char == " " && _second_last_char == ","))
+		draw_text(text_padding + char_width + string_width(input_string), input_string_y, " [values]*"); 
+	
+	else if (suggested_action == "watch" && space_count == 2)
+		draw_text(text_padding + char_width + string_width(input_string), input_string_y, " [vars]*"); 
+		
+	else if (suggested_action == "get" && space_count == 2)
+		draw_text(text_padding + char_width + string_width(input_string), input_string_y, " [values]*"); 
+		
+	else if (_last_char == ":" && suggested_action == "destroy")	
+		draw_text(text_padding + char_width + string_width(input_string), input_string_y, " object_index/instance_id"); 
+		
+	else if (_last_char == ":" && suggested_action != "destroy")	
+		draw_text(text_padding + char_width + string_width(input_string), input_string_y, " [parameters]* , [values]*"); 
+}
 #endregion
 #region Room Suggestions
-else if (suggested_action == "room" && suggested_object == "goto")
-	draw_text(text_padding + char_width + string_width(input_string), input_string_y, " rm_level1"); 
+else if (suggested_action == "room") {
+
+	if (suggested_object == "goto")
+		draw_text(text_padding + char_width + string_width(input_string), input_string_y, " room_index"); 
+}
 #endregion
 #region Window Suggestions
-else if (suggested_action == "window" && suggested_object == "resize")
-	draw_text(text_padding + char_width + string_width(input_string), input_string_y, " width height resize_surface?* (1 = true, 0 = false)"); 
+else if (suggested_action == "window") {
+
+	if (suggested_object == "resize")
+		draw_text(text_padding + char_width + string_width(input_string), input_string_y, " width height resize_surface?* (1 = true, 0 = false)"); 
+}
 #endregion
 draw_set_color(c_white);
 #endregion
@@ -77,6 +98,10 @@ draw_set_color(c_white);
 if (show) {
 	draw_set_color(text_color);	
 	for (var i = 0; i < ds_list_size(suggested); i++) {
+		
+		if (suggested_y <= terminal_y + (i * char_height) + char_height)
+			break;
+		
 		if (in_suggested && i == suggested_index) {
 			draw_set_color(c_white);
 			
@@ -195,9 +220,6 @@ switch (penguin_state) {
 }
 #endregion
 
-//draw_text(10, 10, "suggested_action: " + string(suggested_action));
-//draw_text(10, 30, "suggested_object: " + string(suggested_object));
-//draw_text(10, 50, "space_count: " + string(space_count));
-//draw_text(10, 70, "shift: " + string(keyboard_check(vk_shift)));
-//draw_text(10, 90, "alt: " + string(keyboard_check(vk_lalt)));
-//draw_text(10, 110, "ctrl: " + string(keyboard_check(vk_lcontrol)));
+//draw_text(10, 10, "suggested_object: " + string(suggested_object));
+draw_text(10, 30, "list_size: " + string(ds_list_size(suggested)));
+draw_text(10, 50, "suggested_index: " + string(suggested_index));

@@ -29,5 +29,5 @@ for (var i = 1; i <= _string_length; i++) {
 }
 typing = true;
 
-// Parse Tokens
+// Act On Tokens
 event_user(1);

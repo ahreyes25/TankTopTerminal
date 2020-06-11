@@ -199,14 +199,15 @@ if (typing) {
 			#endregion
 			#region vk_enter
 			case vk_enter:
-				// Normal Enter
+				#region Normal Enter
 				if (!in_history && !in_suggested) {
 					if (input_string != "") {
 						event_user(0);
 						event_user(2);
 					}
 				}
-				// Select History Element
+				#endregion
+				#region Select History Element
 				else if (in_history) {
 					var _history_data	= history[| history_index];
 					var _is_command		= _history_data[5];
@@ -228,9 +229,10 @@ if (typing) {
 						in_history		= false;
 					}
 				}
-				// Select Suggested
+				#endregion
+				#region Select Suggested
 				else if (in_suggested && ds_list_size(suggested) > 0) {
-					// Action
+					#region First Word
 					if (space_count == 0) {
 						input_string		= suggested[| suggested_index] + " ";
 						input_index			= string_length(input_string);
@@ -240,12 +242,13 @@ if (typing) {
 						suggested_action	= string_delete(input_string, string_length(input_string), 1);
 						ds_list_clear(suggested);
 					}
-					// Object
+					#endregion
+					#region Second Word
 					else if (space_count == 1) {
 						// Get Object Name Substring
 						var _action_index  = 0;
 						for (var i = 1; i <= string_length(input_string); i++) {
-							if (string_char_at(input_string, i) == " ") {
+							if (string_char_at(input_string, i) == " " && string_char_at(input_string, i + 1) != ":") {
 								_action_index = i + 1;
 								break;
 							}
@@ -260,13 +263,12 @@ if (typing) {
 						suggested_index		= 0;
 						space_count		   += 1;
 					}
+					#endregion
 				}
+				#endregion
+				
 				#region Auto Format Colon
-				if (space_count == 2 && !auto_delim) {
-					input_string += ": ";
-					input_index  += 2;
-					auto_delim = true;
-				}
+				event_user(5);
 				#endregion
 				#region Auto Format Comma
 				if (keyboard_key == 188) {
@@ -294,7 +296,7 @@ if (typing) {
 			#endregion
 			#region vk_tab
 			case vk_tab:
-				// Autocomplete Action
+				#region Autocomplete Action
 				if (space_count == 0 && ds_list_size(suggested) > 0) {
 					input_string		= suggested[| suggested_index] + " ";
 					input_index			= string_length(input_string);
@@ -304,12 +306,13 @@ if (typing) {
 					suggested_action	= string_delete(input_string, string_length(input_string), 1);
 					ds_list_clear(suggested);
 				}
-				// Autocomplete Object
+				#endregion
+				#region Autocomplete Object
 				else if (space_count == 1 && ds_list_size(suggested) > 0) {
 					// Get Object Name Substring
 					var _action_index  = 0;
 					for (var i = 1; i <= string_length(input_string); i++) {
-						if (string_char_at(input_string, i) == " ") {
+						if (string_char_at(input_string, i) == " " && string_char_at(input_string, i + 1) != ":") {
 							_action_index = i + 1;
 							break;
 						}
@@ -324,12 +327,10 @@ if (typing) {
 					suggested_index		= 0;
 					space_count		   += 1;
 				}
+				#endregion
+				
 				#region Auto Format Colon
-				if (space_count == 2 && !auto_delim) {
-					input_string += ": ";
-					input_index  += 2;
-					auto_delim = true;
-				}
+				event_user(5);
 				#endregion
 				#region Auto Format Comma
 				if (keyboard_key == 188) {
@@ -397,7 +398,7 @@ if (typing) {
 				}
 				
 				// Ignore Special Keys
-				var _keys_to_ignore = [vk_f1, vk_home, vk_end, vk_enter, vk_shift, vk_control, vk_alt, 0];
+				var _keys_to_ignore = [vk_f1, vk_home, vk_end, vk_enter, vk_shift, vk_lshift, vk_rshift, vk_control, vk_lcontrol, vk_rcontrol, vk_alt, vk_lalt, vk_ralt, 0];
 				var _wrong_key		= false;
 				for (var i = 0; i < array_length_1d(_keys_to_ignore); i++) {
 					if (keyboard_key == _keys_to_ignore[i]) {
@@ -477,11 +478,7 @@ if (typing) {
 				}
 				#endregion
 				#region Auto Format Colon
-				if (space_count == 2 && !auto_delim) {
-					input_string += ": ";
-					input_index  += 2;
-					auto_delim = true;
-				}
+				event_user(5);
 				#endregion
 				#region Auto Format Comma
 				if (keyboard_key == 188) {
@@ -519,166 +516,34 @@ if (typing) {
 	}
 	#region Hold Key Down
 	if (_anykey && alarm[0] == -1) {
-		alarm[0] = hold_time;
-		hold_key = keyboard_key;
+		
+		// Ignore Special Keys
+		var _keys_to_ignore = [vk_f1, vk_home, vk_end, vk_enter, vk_shift, vk_lshift, vk_rshift, vk_control, vk_lcontrol, vk_rcontrol, vk_alt, vk_lalt, vk_ralt, 0];
+		var _wrong_key		= false;
+		for (var i = 0; i < array_length_1d(_keys_to_ignore); i++) {
+			if (keyboard_key == _keys_to_ignore[i]) {
+				_wrong_key = true;
+				break;
+			}
+		}
+		if (!_wrong_key) {
+			alarm[0] = hold_time;
+			hold_key = keyboard_key;
+		}
 	}
 
 	// Reset Holdkey
 	if (!_anykey || !keyboard_check(hold_key)) {
 		alarm[0] = -1;
 		holding	 = false;
-		hold_key = undefined;
+		hold_key = 0;
 	}	
 	#endregion
 }
-
-#region Trim History If Exceeds
+#region Trim History If Exceeds Storage Limit
 if (show && ds_list_size(history) > history_limit)
 	ds_list_delete(history, history_limit - 1);
 #endregion
-#region Autocomplete Suggestions
-if (show && typing) {
-	#region Action
-	if (space_count == 0) {
-		ds_list_clear(suggested);
-		for (var i = 0; i < array_length_1d(commands); i++) {
-			var _command = commands[i];
-			
-			var _matching = true;
-			for (var j = 1; j <= string_length(input_string); j++) {
-				if (string_char_at(_command, j) != string_char_at(input_string, j)) {
-					_matching = false;
-					break;
-				}
-			}
-			
-			// If Substring Matches Command, Add to Suggested List
-			if (_matching) {
-				if (ds_list_size(suggested) < suggestion_limit)
-					ds_list_add(suggested, _command);
-			}
-		}
-	}
-	#endregion
-	#region Second Word
-	else if (space_count == 1) {
-		#region Object
-		if (suggested_action != "room" && suggested_action != "window") {
-			// Get Second Substring
-			var _action_index  = 0;
-			for (var i = 1; i <= string_length(input_string); i++) {
-				if (string_char_at(input_string, i) == " ") {
-					_action_index = i + 1;
-					break;
-				}
-			}
-			var _object_string = string_copy(input_string, _action_index, string_length(input_string) - _action_index + 1);
-		
-			// Compare Substring To All Object Names In Resource Tree
-			ds_list_clear(suggested);
-			for (var i = 0; i < 10000; i++) {
-				if (!object_exists(i))								break;
-				if (ds_list_size(suggested) >= suggestion_limit)	break;
-			
-				// Check If Name Match Substring
-				var _matching	 = true;
-				var _object_name = object_get_name(i);
-				for (var j = 1; j <= string_length(_object_string); j++) {
-					if (string_char_at(_object_name, j) != string_char_at(_object_string, j)) {
-						_matching = false;
-						break;
-					}
-				}
-			
-				// Check For Objects To Ignore
-				var _valid_object = true;
-				for (var j = 0; j < array_length_1d(objects_ignore); j++) {
-					if (_object_name == object_get_name(objects_ignore[j])) {
-						_valid_object = false;
-						break;
-					}
-				}
-			
-				// If Substring Matches Name, Add to Suggested List
-				var _object_exists		= instance_exists(i);
-				var _action				= (suggested_action == "get" || suggested_action == "destroy" || suggested_action == "watch" || suggested_action == "set");
-				var _invalid_command	= _action && !_object_exists;
-				if (_matching && _valid_object && !_invalid_command)
-					ds_list_add(suggested, _object_name);
-			}
-		}
-		#endregion
-		#region Room
-		else if (suggested_action == "room") {
-			var _room_commands = room_commands;
-			// Get Second Substring
-			var _action_index  = 0;
-			for (var i = 1; i <= string_length(input_string); i++) {
-				if (string_char_at(input_string, i) == " ") {
-					_action_index = i + 1;
-					break;
-				}
-			}
-			var _room_string = string_copy(input_string, _action_index, string_length(input_string) - _action_index + 1);
-			
-			// Compare Substring To All Object Names In Resource Tree
-			ds_list_clear(suggested);
-			for (var i = 0; i < array_length_1d(_room_commands); i++) {
-				// Check If Name Match Substring
-				var _matching	  = true;
-				var _room_command = _room_commands[i];
-				for (var j = 1; j <= string_length(_room_string); j++) {
-					if (string_char_at(_room_command, j) != string_char_at(_room_string, j)) {
-						_matching = false;
-						break;
-					}
-				}
-			
-				// If Substring Matches Name, Add to Suggested List
-				if (_matching) {
-					if (ds_list_size(suggested) < suggestion_limit)
-						ds_list_add(suggested, _room_command);
-				}
-			}
-		}
-		#endregion
-		#region Window
-		else if (suggested_action == "window") {
-			var _window_commands = window_commands;
-			// Get Second Substring
-			var _action_index  = 0;
-			for (var i = 1; i <= string_length(input_string); i++) {
-				if (string_char_at(input_string, i) == " ") {
-					_action_index = i + 1;
-					break;
-				}
-			}
-			var _window_string = string_copy(input_string, _action_index, string_length(input_string) - _action_index + 1);
-			
-			// Compare Substring To All Object Names In Resource Tree
-			ds_list_clear(suggested);
-			for (var i = 0; i < array_length_1d(_window_commands); i++) {
-				// Check If Name Match Substring
-				var _matching		= true;
-				var _window_command = _window_commands[i];
-				for (var j = 1; j <= string_length(_window_string); j++) {
-					if (string_char_at(_window_command, j) != string_char_at(_window_string, j)) {
-						_matching = false;
-						break;
-					}
-				}
-			
-				// If Substring Matches Name, Add to Suggested List
-				if (_matching) {
-					if (ds_list_size(suggested) < suggestion_limit)
-						ds_list_add(suggested, _window_command);
-				}
-			}
-		}
-		#endregion
-	}
-	#endregion
-	else
-		ds_list_clear(suggested);	
-}
-#endregion
+
+// Autocomplete Suggestions
+event_user(6);

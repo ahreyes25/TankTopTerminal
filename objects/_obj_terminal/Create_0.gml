@@ -35,7 +35,8 @@ room_commands = [
 
 window_commands = [
 	"fullscreen", 
-	"resize"
+	"resize",
+	"center",
 ];
 
 objects_ignore = [
@@ -56,7 +57,6 @@ input_index			= 0;
 input_string_y		= 0;
 tokens				= ds_list_create();
 text_padding		= 20;
-shift				= false;
 auto_delim			= false;
 comma_placed		= false;
 anchor_index		= undefined;
@@ -67,7 +67,7 @@ suggested_object	= "";
 // Keyboard
 hold_time			= 30;
 holding				= false;
-hold_key			= undefined;
+hold_key			= 0;
 typing				= true;
 space_count			= 0;
 					
@@ -79,7 +79,7 @@ text_color			= c_white;
 // Terminal			
 terminal_y			= 0;
 terminal_yt			= sh / 2;
-show				= true;
+show				= false;
 history				= ds_list_create();
 in_history			= false;
 history_index		= 0;
