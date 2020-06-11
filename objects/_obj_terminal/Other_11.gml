@@ -391,6 +391,16 @@ if (_failed)
 else
 	penguin_state = "happy";
 #endregion
+#region Save Favorite Objects
+if (suggested_action == "create" || suggested_action == "get" || suggested_action == "set") {
+	if (ds_list_find_index(fav_objects, _object) == -1) {
+		ds_list_insert(fav_objects, 0, _object);
+	
+		if (ds_list_size(fav_objects) > suggestion_limit)
+			ds_list_delete(fav_objects, ds_list_size(fav_objects) - 1);	
+	}
+}
+#endregion
 
 ds_list_destroy(_props);
 ds_list_destroy(_values);

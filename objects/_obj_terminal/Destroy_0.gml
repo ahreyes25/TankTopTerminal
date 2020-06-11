@@ -11,4 +11,5 @@ if (!destroyed) {	// singleton destruction
 	}
 
 	ds_list_destroy(gui_objects);
+	ds_list_destroy(fav_objects);
 }

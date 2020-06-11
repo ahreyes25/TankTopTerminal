@@ -89,6 +89,7 @@ in_suggested		= false;
 suggested_index		= 0;
 suggested_y			= terminal_y;
 suggestion_limit	= 10;
+fav_objects			= ds_list_create();
 
 // Logo
 penguin_scale		= 10;
