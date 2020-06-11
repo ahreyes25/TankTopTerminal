@@ -219,7 +219,3 @@ switch (penguin_state) {
 		break;
 }
 #endregion
-
-//draw_text(10, 10, "suggested_object: " + string(suggested_object));
-draw_text(10, 30, "list_size: " + string(ds_list_size(suggested)));
-draw_text(10, 50, "suggested_index: " + string(suggested_index));
