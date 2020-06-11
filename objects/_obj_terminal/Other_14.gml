@@ -15,12 +15,13 @@ if (file_exists("terminal.buf")) {
 	var _data_string	= buffer_read(_buffer, buffer_text);
 	var _data_map		= json_decode(_data_string);
 
+	#region Load History
 	ds_list_clear(history);
 
-	var _size = _data_map[? "size"];
+	var _history_size = _data_map[? "history_size"];
 	
-	for (var i = 0; i < _size; i++) {
-		var _data_point_string	= _data_map[? string(i)];
+	for (var i = 0; i < _history_size; i++) {
+		var _data_point_string	= _data_map[? "h_" + string(i)];
 		var _data_point_map		= json_decode(_data_point_string);
 		
 		var _input_string		= _data_point_map[? "input_string"];
@@ -37,6 +38,21 @@ if (file_exists("terminal.buf")) {
 		ds_list_add(history, [_input_string, _input_index, _space_count, _comma_placed, _auto_delim, _command, _failed, _fail_message, _suggested_action, _suggested_object]);
 		ds_map_destroy(_data_point_map);
 	}	
+	#endregion
+	#region Load Fav Objects
+	ds_list_clear(fav_objects);
+
+	var _fav_objects_size = _data_map[? "fav_objects_size"];
+	
+	for (var i = 0; i < _fav_objects_size; i++) {
+		var _data_point_string	= _data_map[? "fo_" + string(i)];
+		var _data_point_map		= json_decode(_data_point_string);
+		var _fav_objects_string = _data_point_map[? "fav_object_string"];
+		
+		ds_list_add(fav_objects, _fav_objects_string);
+		ds_map_destroy(_data_point_map);
+	}	
+	#endregion
 	
 	// Cleanup
 	buffer_delete(_buffer);

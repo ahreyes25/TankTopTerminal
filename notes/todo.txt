@@ -1,4 +1,5 @@
-- modify suggested template text better
+- save fav_objects list
+- fix fav_objects storing on existing inserts
 
 // Later Release
 - customize terminal properties in terminal and save

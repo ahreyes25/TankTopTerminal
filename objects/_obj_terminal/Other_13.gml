@@ -4,7 +4,8 @@ var _buffer		= buffer_create(1, buffer_grow, 1);
 var _data_map	= ds_map_create();
 buffer_seek(_buffer, buffer_seek_start, 0);
 
-_data_map[? "size"] = ds_list_size(history);
+#region Save History
+_data_map[? "history_size"] = ds_list_size(history);
 
 for (var i = 0; i < ds_list_size(history); i++) {
 	var _data				= history[| i];
@@ -32,9 +33,23 @@ for (var i = 0; i < ds_list_size(history); i++) {
 	_data_point_map[? "suggested_object"]	= _suggested_object;
 	
 	var _data_point_string	= json_encode(_data_point_map);
-	_data_map[? string(i)]	= _data_point_string;
+	_data_map[? "h_" + string(i)] = _data_point_string;
 	ds_map_destroy(_data_point_map);
 }
+#endregion
+#region Save Fav Objects
+_data_map[? "fav_objects_size"] = ds_list_size(fav_objects);
+
+for (var i = 0; i < ds_list_size(fav_objects); i++) {
+	var _fav_object_string					= fav_objects[| i];
+	var _data_point_map						= ds_map_create();
+	_data_point_map[? "fav_object_string"]	= _fav_object_string;
+	
+	var _data_point_string	= json_encode(_data_point_map);
+	_data_map[? "fo_" + string(i)] = _data_point_string;
+	ds_map_destroy(_data_point_map);
+}
+#endregion
 
 var _data_string = json_encode(_data_map);
 buffer_write(_buffer, buffer_text, _data_string);
