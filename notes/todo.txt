@@ -1,5 +1,7 @@
 - save fav_objects list
 - fix fav_objects storing on existing inserts
+- repeat commands multiple times
+- execute scripts directly
 
 // Later Release
 - customize terminal properties in terminal and save
