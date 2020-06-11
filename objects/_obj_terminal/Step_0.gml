@@ -610,7 +610,7 @@ if (show && typing) {
 		#endregion
 		#region Room
 		else if (suggested_action == "room") {
-			var _room_commands = ["restart", "next", "previous", "goto"];
+			var _room_commands = room_commands;
 			// Get Second Substring
 			var _action_index  = 0;
 			for (var i = 1; i <= string_length(input_string); i++) {
@@ -644,7 +644,7 @@ if (show && typing) {
 		#endregion
 		#region Window
 		else if (suggested_action == "window") {
-			var _window_commands = ["fullscreen", "resize"];
+			var _window_commands = window_commands;
 			// Get Second Substring
 			var _action_index  = 0;
 			for (var i = 1; i <= string_length(input_string); i++) {

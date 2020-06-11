@@ -15,6 +15,35 @@ if (_already_exists) {
 }
 #endregion
 
+commands = [
+	"create", 
+	"destroy", 
+	"get", 
+	"set", 
+	"watch", 
+	"room", 
+	"window", 
+	"clear",
+];
+
+room_commands = [
+	"restart", 
+	"next", 
+	"previous", 
+	"goto"
+];
+
+window_commands = [
+	"fullscreen", 
+	"resize"
+];
+
+objects_ignore = [
+	_obj_terminal, 
+	_obj_terminal_gui
+];
+
+#region DO NOT MODIFY
 // Util
 sw					= surface_get_width(application_surface);
 sh					= surface_get_height(application_surface);
@@ -34,14 +63,6 @@ anchor_index		= undefined;
 shift_held			= false;
 suggested_action	= "";
 suggested_object	= "";
-commands			= [
-	"create", "destroy", "get", "set", "watch", 
-	"room", "window",
-	"clear",
-];
-objects_ignore		= [
-	_obj_terminal, _obj_terminal_gui
-];
 
 // Keyboard
 hold_time			= 30;
@@ -81,3 +102,4 @@ orange				= make_color_rgb(242, 102, 47);
 // Other 
 gui_objects			= ds_list_create();
 event_user(4);		// check for load data
+#endregion
