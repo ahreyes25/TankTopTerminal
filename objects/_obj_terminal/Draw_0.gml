@@ -6,13 +6,16 @@ if (show && in_history) {
 	if (!_command) {
 		var _prop		= _history_data[0];
 		var _bob_iter	= bob_iter;
+		var _depth		= depth;
 		
 		with (all) {
 			if (string(id) == _prop) {
-				var _scale = 0.5;
+				var _scale	= 0.5;
+				_depth		= depth - 1;
 				draw_sprite_ext(spr_arrow, 0, x, y + sin(_bob_iter / 2) * 5, _scale, _scale, 0, c_white, 0.75);
 				break;	
 			}
 		}
+		depth = _depth;
 	}
 }
