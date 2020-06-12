@@ -47,14 +47,6 @@
             }
         },
         {
-            "Key": "0f43b132-8668-460a-b835-9a41fc749f5b",
-            "Value": {
-                "id": "2187b664-b1ea-4d98-bec8-cd4fb2ce3f30",
-                "resourcePath": "views\/0f43b132-8668-460a-b835-9a41fc749f5b.yy",
-                "resourceType": "GMFolder"
-            }
-        },
-        {
             "Key": "0f9d95f3-70a5-4cf9-a31b-c22e0c87859e",
             "Value": {
                 "id": "a947eb36-ed98-44f7-9562-78805478786a",
@@ -79,27 +71,11 @@
             }
         },
         {
-            "Key": "1c47e965-f275-4be5-a0b3-cd9011e3028a",
-            "Value": {
-                "id": "99f20874-3438-4a6f-9c28-71195f47b93c",
-                "resourcePath": "views\/1c47e965-f275-4be5-a0b3-cd9011e3028a.yy",
-                "resourceType": "GMFolder"
-            }
-        },
-        {
             "Key": "28764ee7-34c5-4b52-8b86-78e192009428",
             "Value": {
                 "id": "e47494f2-2738-407b-b2d5-bfe493bb6bf5",
                 "resourcePath": "views\/28764ee7-34c5-4b52-8b86-78e192009428.yy",
                 "resourceType": "GMFolder"
-            }
-        },
-        {
-            "Key": "2d54b131-65fe-4bb4-9d09-d523fdc79a6a",
-            "Value": {
-                "id": "cbcf02bf-9864-45f3-926e-ca443b7c8593",
-                "resourcePath": "objects\/obj_player\/obj_player.yy",
-                "resourceType": "GMObject"
             }
         },
         {
@@ -140,14 +116,6 @@
                 "id": "5903b5a5-03c7-4a90-bdc7-dfa99bd31479",
                 "resourcePath": "views\/4b35ee50-c071-4355-a8d5-64ad65446ff0.yy",
                 "resourceType": "GMFolder"
-            }
-        },
-        {
-            "Key": "568a8f75-4bfe-483b-8970-8fa0fb5b79b4",
-            "Value": {
-                "id": "362a93a4-a6e4-4b11-a866-1f76000f5c76",
-                "resourcePath": "objects\\obj_enemy\\obj_enemy.yy",
-                "resourceType": "GMObject"
             }
         },
         {
@@ -204,14 +172,6 @@
                 "id": "34044e0f-70ba-4e6d-945d-2bafbf8f2b0c",
                 "resourcePath": "options\/ios\/options_ios.yy",
                 "resourceType": "GMiOSOptions"
-            }
-        },
-        {
-            "Key": "8781980d-266d-4426-b4be-330d343b14d3",
-            "Value": {
-                "id": "5197010b-9c81-48a5-bf47-6309bc5c1119",
-                "resourcePath": "sprites\/spr_player\/spr_player.yy",
-                "resourceType": "GMSprite"
             }
         },
         {

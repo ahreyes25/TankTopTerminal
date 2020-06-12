@@ -1,4 +1,3 @@
-// Later Release
 - repeat commands multiple times
 - execute scripts directly
 - get window dimensions
