@@ -44,6 +44,32 @@ objects_ignore = [
 	_obj_terminal_gui
 ];
 
+// Customizable Properties
+history_limit					= 15;		// number of items to store in history
+suggestion_limit				= 10;		// number of items to store in suggested
+								
+blink_speed						= 0.05;		// blinking speed of cursor
+text_color						= c_white;
+unselected_text_color			= c_gray;
+template_text_color				= c_dkgray;
+suggested_text_color_1			= make_color_rgb(242, 102, 47);	// orange
+suggested_text_color_2			= c_white;
+failed_text_color				= suggested_text_color_1;
+text_select_highlight_color		= c_gray;
+text_select_highlight_alpha		= 1.0
+text_arrow_icon					= ">";
+text_cursor_icon				= "|";
+text_cursor_color				= text_color;
+								
+terminal_bg_color				= c_black;
+terminal_bg_alpha				= 0.6;
+terminal_drop_shadow_color		= c_black;
+terminal_drop_shadow_alpha		= 0.2; 
+terminal_drop_shadow_height		= 10;
+terminal_top_line_color			= c_gray;
+terminal_bottom_line_color		= c_gray;
+terminal_bottom_line_color_2	= suggested_text_color_1;
+
 #region DO NOT MODIFY
 // Util
 sw					= surface_get_width(application_surface);
@@ -73,8 +99,6 @@ space_count			= 0;
 					
 // Decorative		
 blink_iter			= 0;
-blink_speed			= 0.05;
-text_color			= c_white;
 					
 // Terminal			
 terminal_y			= 0;
@@ -83,12 +107,10 @@ show				= false;
 history				= ds_list_create();
 in_history			= false;
 history_index		= 0;
-history_limit		= 15;
 suggested			= ds_list_create();
 in_suggested		= false;
 suggested_index		= 0;
 suggested_y			= terminal_y;
-suggestion_limit	= 10;
 fav_objects			= ds_list_create();
 
 // Logo
@@ -98,7 +120,6 @@ penguin_image_speed	= 0.05;
 penguin_state		= "idle";
 bob_iter			= 0;
 bob_iter_speed		= 0.3;
-orange				= make_color_rgb(242, 102, 47);
 
 // Other 
 gui_objects			= ds_list_create();

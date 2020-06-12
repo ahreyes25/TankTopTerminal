@@ -1,15 +1,15 @@
 depth = -10000;
 
 #region Draw Terminal Drop Shadow
-draw_set_color(c_black);
-draw_set_alpha(0.2);
-draw_rectangle(0, suggested_y, sw, suggested_y + 10, false);
+draw_set_color(terminal_drop_shadow_color);
+draw_set_alpha(terminal_drop_shadow_alpha);
+draw_rectangle(0, suggested_y, sw, suggested_y + terminal_drop_shadow_height, false);
 draw_set_color(c_white);
 draw_set_alpha(1);
 #endregion
 #region Draw Black Background
-draw_set_color(c_black);
-draw_set_alpha(0.6);
+draw_set_color(terminal_bg_color);
+draw_set_alpha(terminal_bg_alpha);
 // Main Background
 draw_rectangle(0, 0, sw, terminal_y, false);
 
@@ -25,36 +25,38 @@ if (anchor_index != undefined) {
 	var _y1 = input_string_y;
 	var _x2 = text_padding + char_width + (input_index * char_width);
 	var _y2 = input_string_y + char_height;
-	var _c  = c_gray;
+	var _c  = text_select_highlight_color;
+	draw_set_alpha(text_select_highlight_alpha);
 	draw_rectangle_color(_x1, _y1, _x2, _y2, _c, _c, _c, _c, false); 	
+	draw_set_alpha(1.0);
 }
 #endregion
 #region Draw Anchor Point
 draw_set_color(text_color);	
 if (!in_history && !in_suggested)
-	draw_text(text_padding / 2, input_string_y, ">");
+	draw_text(text_padding / 2, input_string_y, text_arrow_icon);
 else if (in_history)
-	draw_text(text_padding / 2, input_string_y - (char_height * 2) - (char_height * history_index), ">");
+	draw_text(text_padding / 2, input_string_y - (char_height * 2) - (char_height * history_index), text_arrow_icon);
 else if (in_suggested) 
-	draw_text(text_padding / 2, input_string_y + (char_height * 2) + (char_height * suggested_index), ">");
+	draw_text(text_padding / 2, input_string_y + (char_height * 2) + (char_height * suggested_index), text_arrow_icon);
 draw_set_color(c_white);	
 #endregion
 #region Draw Blinking Cursor
-draw_set_color(text_color);	
+draw_set_color(text_cursor_color);	
 var _cursor_x = (input_index * char_width) + char_width * 0.5;
 if ((blink_iter mod 2 || !typing) && !in_history && !in_suggested)
-	draw_text(text_padding + _cursor_x, input_string_y, "|");
+	draw_text(text_padding + _cursor_x, input_string_y, text_cursor_icon);
 draw_set_color(c_white);	
 #endregion
 #region Draw Input Text
 draw_set_color(text_color);	
 if (in_history) 
-	draw_set_color(c_gray);
+	draw_set_color(unselected_text_color);
 draw_text(text_padding + char_width, input_string_y, input_string); 
 draw_set_color(c_white);
 #endregion
 #region Draw Template Text
-draw_set_color(c_dkgray);
+draw_set_color(template_text_color);
 #region Generic Suggestion
 if (input_string == "")
 	draw_text(text_padding + char_width, input_string_y, "action object : [parameters]* , [values]*"); 
@@ -122,18 +124,20 @@ if (show) {
 			draw_set_color(c_white);
 			draw_text(text_padding + char_width, input_string_y + (char_height * 2) + (char_height * i), suggested[| i]);
 			if (_info_text != "") {
-				draw_set_color(orange);
+				draw_set_color(suggested_text_color_1);
 				draw_text(text_padding + char_width + string_width(suggested[| i]), input_string_y + (char_height * 2) + (char_height * i), _info_text); 
 				draw_set_color(c_white);
 			}
 			if (_example_text != "") {
-				draw_set_color(c_white);
+				draw_set_color(suggested_text_color_2);
 				draw_text(text_padding + char_width + string_width(suggested[| i]) + string_width(_info_text), input_string_y + (char_height * 2) + (char_height * i), _example_text); 
+				draw_set_color(c_white);
 			}
 		}
 		else {
-			draw_set_color(c_gray);
+			draw_set_color(unselected_text_color);
 			draw_text(text_padding + char_width, input_string_y + (char_height * 2) + (char_height * i), suggested[| i]); 
+			draw_set_color(c_white);
 		}
 		draw_set_color(c_white);
 	}
@@ -142,15 +146,15 @@ if (show) {
 #endregion
 #region Draw Terminal Decorators
 // Terminal Top Line
-draw_set_color(c_gray);
+draw_set_color(terminal_top_line_color);
 draw_line(0, input_string_y - 5, sw, input_string_y - 5);
 
 // Terminal Bottom Line
-draw_set_color(c_gray);
+draw_set_color(terminal_bottom_line_color);
 draw_line(0, terminal_y, sw, terminal_y);
 
 // Suggestion Bottom Line
-draw_set_color(orange);
+draw_set_color(terminal_bottom_line_color_2);
 draw_line(0, suggested_y, sw, suggested_y);
 draw_set_color(c_white);
 #endregion
@@ -161,17 +165,17 @@ for (var i = 0; i < ds_list_size(history); i++) {
 		var _failed			= _history_data[6];
 		
 		if (!_failed)
-			draw_set_color(c_white);
+			draw_set_color(text_color);
 		else
-			draw_set_color(orange);
+			draw_set_color(failed_text_color);
 	}
 	else {
 		var _history_data	= history[| i];
 		var _failed			= _history_data[6];
 		if (!_failed)
-			draw_set_color(c_gray);
+			draw_set_color(unselected_text_color);
 		else
-			draw_set_color(merge_color(orange, c_black, 0.5));
+			draw_set_color(merge_color(failed_text_color, c_black, 0.5));
 	}
 		
 	var _command = _history_data[5];
