@@ -45,21 +45,21 @@ objects_ignore = [
 ];
 
 // Customizable Properties
-history_limit					= 15;		// number of items to store in history
-suggestion_limit				= 10;		// number of items to store in suggested
+history_limit					= 15;								// number of items to store in history
+suggestion_limit				= 10;								// number of items to store in suggested
 								
-blink_speed						= 0.05;		// blinking speed of cursor
-text_color						= c_white;
-unselected_text_color			= c_gray;
-template_text_color				= c_dkgray;
-suggested_text_color_1			= make_color_rgb(242, 102, 47);	// orange
-suggested_text_color_2			= c_white;
-failed_text_color				= suggested_text_color_1;
-text_select_highlight_color		= c_gray;
-text_select_highlight_alpha		= 1.0
-text_arrow_icon					= ">";
-text_cursor_icon				= "|";
-text_cursor_color				= text_color;
+blink_speed						= 0.05;								// blinking speed of cursor
+text_color						= c_white;							// default text color when using active text
+unselected_text_color			= c_gray;							// text color for text that sits in the background unselected
+template_text_color				= c_dkgray;							// used for suggesting possible words to text in terminal line
+suggested_text_color_1			= make_color_rgb(242, 102, 47);		// orange, one of two colors used in automcomplete suggested descriptions
+suggested_text_color_2			= c_white;							// one of two colors used in automcomplete suggested descriptions
+failed_text_color				= suggested_text_color_1;			// text color for when a command fails
+text_select_highlight_color		= c_gray;							// holding shift to select characters, the rectangle that draws over the chars
+text_select_highlight_alpha		= 1.0								// holding shift to select characters, the rectangle that draws over the chars
+text_arrow_icon					= ">";								// icon used to visualize selections
+text_cursor_icon				= "|";								// icon used for visualizing cursor position
+text_cursor_color				= text_color;						// color of cursor
 								
 terminal_bg_color				= c_black;
 terminal_bg_alpha				= 0.6;
@@ -94,7 +94,7 @@ suggested_object	= "";
 hold_time			= 30;
 holding				= false;
 hold_key			= 0;
-typing				= true;
+typing				= false;
 space_count			= 0;
 					
 // Decorative		

@@ -150,6 +150,71 @@ switch (_action) {
 					
 					if (_param != undefined && _param != "" && _value != undefined && _value != "") {
 						if (variable_instance_exists(id, _param)) {
+							
+							#region Check For Room Resource
+							var _room_resource_index = undefined;
+							for (var j = 0; j < 10000; j++) {
+								if (!room_exists(j)) break;
+								if (room_get_name(j) == _value) {
+									_room_resource_index = j;
+									_value = j;
+									break;
+								}
+							}
+							#endregion
+							#region Check For Script Resource
+							var _script_resource_index = undefined;
+							if (_room_resource_index == undefined) {
+								for (var j = 0; j < 10000; j++) {
+									if (!script_exists(j)) break;
+									if (script_get_name(j) == _value) {
+										_script_resource_index = j;
+										_value = j;
+										break;
+									}
+								}
+							}
+							#endregion
+							#region Check For Sprite Resource
+							var _sprite_resource_index = undefined;
+							if (_room_resource_index == undefined && _script_resource_index == undefined) {
+								for (var j = 0; j < 10000; j++) {
+									if (!sprite_exists(j)) break;
+									if (sprite_get_name(j) == _value) {
+										_sprite_resource_index = j;
+										_value = j;
+										break;
+									}
+								}
+							}
+							#endregion
+							#region Check For Audio Resource
+							var _audio_resource_index = undefined;
+							if (_room_resource_index == undefined && _script_resource_index == undefined && _sprite_resource_index == undefined) {
+								for (var j = 0; j < 10000; j++) {
+									if (!audio_exists(j)) break;
+									if (audio_get_name(j) == _value) {
+										_audio_resource_index = j;
+										_value = j;
+										break;
+									}
+								}
+							}
+							#endregion
+							#region Check For Object Resource
+							var _object_resource_index = undefined;
+							if (_room_resource_index == undefined && _script_resource_index == undefined && _sprite_resource_index == undefined && _object_resource_index == undefined) {
+								for (var j = 0; j < 10000; j++) {
+									if (!object_exists(j)) break;
+									if (object_get_name(j) == _value) {
+										_object_resource_index = j;
+										_value = j;
+										break;
+									}
+								}
+							}
+							#endregion
+							
 							if (is_string(_value))
 								variable_instance_set(id, _param, _value);
 							else
@@ -166,7 +231,7 @@ switch (_action) {
 				}
 			}
 			else 
-				_fail_message = "object " + string(_object) + " does not exist.";
+				_fail_message = "object or variable does not exist.";
 		}
 		ds_list_insert(_history, 0, [input_string, input_index, space_count, comma_placed, auto_delim, true, _failed, _fail_message, suggested_action, suggested_object]);
 		break;

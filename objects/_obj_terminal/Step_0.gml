@@ -256,10 +256,32 @@ if (typing) {
 					
 						var _object_string			= string_copy(input_string, _action_index, string_length(input_string) - _action_index + 1);
 						var _suggested_substring	= string_delete(suggested[| suggested_index], 1, string_length(_object_string));
+						_suggested_substring		= string_replace_all(_suggested_substring, " ", "");
 						input_string	   += _suggested_substring + " ";
 						input_index		   += string_length(_suggested_substring) + 1;
 						in_suggested		= false;
 						suggested_object	= suggested[| suggested_index];
+						suggested_index		= 0;
+						space_count		   += 1;
+					}
+					#endregion
+					#region Fourth Word
+					else if (space_count >= 4) {
+						// Get Object Name Substring
+						var _action_index  = 0;
+						for (var i = 1; i <= string_length(input_string); i++) {
+							if (string_char_at(input_string, i) == ",") {
+								_action_index = i + 1;
+								break;
+							}
+						}
+					
+						var _value_string			= string_copy(input_string, _action_index, string_length(input_string) - _action_index + 1);
+						var _suggested_substring	= string_delete(suggested[| suggested_index], 1, string_length(_value_string) - 1);
+						_suggested_substring		= string_replace_all(_suggested_substring, " ", "");
+						input_string	   += _suggested_substring + " ";
+						input_index		   += string_length(_suggested_substring) + 1;
+						in_suggested		= false;
 						suggested_index		= 0;
 						space_count		   += 1;
 					}
@@ -296,7 +318,7 @@ if (typing) {
 			#endregion
 			#region vk_tab
 			case vk_tab:
-				#region Autocomplete Action
+				#region Autocomplete First Word
 				if (space_count == 0 && ds_list_size(suggested) > 0) {
 					input_string		= suggested[| suggested_index] + " ";
 					input_index			= string_length(input_string);
@@ -307,7 +329,7 @@ if (typing) {
 					ds_list_clear(suggested);
 				}
 				#endregion
-				#region Autocomplete Object
+				#region Autocomplete Second Word
 				else if (space_count == 1 && ds_list_size(suggested) > 0) {
 					// Get Object Name Substring
 					var _action_index  = 0;
@@ -324,6 +346,27 @@ if (typing) {
 					input_index		   += string_length(_suggested_substring) + 1;
 					in_suggested		= false;
 					suggested_object	= suggested[| suggested_index];
+					suggested_index		= 0;
+					space_count		   += 1;
+				}
+				#endregion
+				#region Autocomplete Fourth Word
+				else if (space_count >= 4 && ds_list_size(suggested) > 0) {
+					// Get Object Name Substring
+					var _action_index  = 0;
+					for (var i = 1; i <= string_length(input_string); i++) {
+						if (string_char_at(input_string, i) == ",") {
+							_action_index = i + 1;
+							break;
+						}
+					}
+					
+					var _value_string			= string_copy(input_string, _action_index, string_length(input_string) - _action_index + 1);
+					var _suggested_substring	= string_delete(suggested[| suggested_index], 1, string_length(_value_string) - 1);
+					_suggested_substring		= string_replace_all(_suggested_substring, " ", "");
+					input_string	   += _suggested_substring + " ";
+					input_index		   += string_length(_suggested_substring) + 1;
+					in_suggested		= false;
 					suggested_index		= 0;
 					space_count		   += 1;
 				}

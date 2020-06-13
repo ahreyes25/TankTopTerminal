@@ -225,3 +225,9 @@ switch (penguin_state) {
 		break;
 }
 #endregion
+
+draw_text(10, 10, "input_string: "		+ string(input_string));
+draw_text(10, 30, "input_index: "		+ string(input_index));
+draw_text(10, 50, "suggested_action: "	+ string(suggested_action));
+draw_text(10, 70, "suggested_object: "	+ string(suggested_object));
+draw_text(10, 90, "space_count: "		+ string(space_count));

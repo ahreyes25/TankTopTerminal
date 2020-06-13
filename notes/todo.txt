@@ -1,8 +1,6 @@
 - repeat commands multiple times
 - execute scripts directly
 - get window dimensions
-- customize terminal properties in terminal and save
-- track most used terms
 - layer operations
 - fix mac bugs?
 - room, sprite, and script autocomplete
