@@ -30,12 +30,19 @@ if (show && typing) {
 			// Compare Substring To All Object Names In Resource Tree
 			ds_list_clear(suggested);
 			
-			// Add Favorite Objects to List First
-			for (var i = 0; i < ds_list_size(fav_objects); i++)
-				ds_list_add(suggested, fav_objects[| i]);	
-					
+			var _suggested_list = ds_list_create();
 			
-			// Get Second Substring
+			// Add Favorite Objects & All Other Objects to Temp List
+			for (var i = 0; i < ds_list_size(fav_objects); i++)
+				ds_list_add(_suggested_list, fav_objects[| i]);	
+				
+			for (var i = 0; i < 10000; i++) {
+				if (!object_exists(i)) break;
+				if (ds_list_find_index(_suggested_list, object_get_name(i)) == -1)
+					ds_list_add(_suggested_list, object_get_name(i));
+			}
+			
+			// Get Second Typed Substring
 			var _action_index  = 0;
 			for (var i = 1; i <= string_length(input_string); i++) {
 				if (string_char_at(input_string, i) == " ") {
@@ -45,13 +52,12 @@ if (show && typing) {
 			}
 			var _object_string = string_copy(input_string, _action_index, string_length(input_string) - _action_index + 1);
 			
-			// Iterate Through All Game Objects
-			for (var i = 0; i < 10000; i++) {
-				if (!object_exists(i)) break;
+			// Iterate Through Favorite & All Objects In Temp List
+			for (var i = 0; i < ds_list_size(_suggested_list); i++) {
 			
 				// Check If Name Match Substring
 				var _matching	 = true;
-				var _object_name = object_get_name(i);
+				var _object_name = _suggested_list[| i];
 				for (var j = 1; j <= string_length(_object_string); j++) {
 					if (string_char_at(_object_name, j) != string_char_at(_object_string, j)) {
 						_matching = false;
