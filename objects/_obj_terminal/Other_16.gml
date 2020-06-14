@@ -258,22 +258,8 @@ if (show && typing) {
 				}
 			}
 			
-			// Adjust For Fourth+ Word
-			var _space_count = 0;
-			if (space_count > 4) { // DEBUG HERE !!!! vvvvvvvvvvvvvvvvvv , make sure _resource_String is parsing correctly
-				for (var i = _action_index; i <= string_length(input_string); i++) {
-					if (string_char_at(input_string, i) == " ")
-						_space_count++;
-					if (_space_count + 4 == space_count) {
-						_action_index = i + 2;
-						break;
-					}
-				}
-			}
-			
 			var _resource_string = string_copy(input_string, _action_index, string_length(input_string) - _action_index + 1);
 			_resource_string = string_replace_all(_resource_string, " ", "");
-			show_debug_message(_resource_string);
 			
 			// Iterate Through All Names In Temp List
 			for (var i = 0; i < ds_list_size(_suggested_list); i++) {
